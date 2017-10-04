@@ -14,7 +14,7 @@
 
 void		p_plan(t_e *e, t_fract *fract)
 {
-	e->ite_max = 250;
+	e->ite_max = 50;
 	fractale(e, fract);
 	mlx_put_image_to_window(e->mlx, e->win, e->img->img_i, 0, 0);
 }

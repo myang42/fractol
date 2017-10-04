@@ -32,17 +32,24 @@ void		trz(t_e *e)
 void		keyfonc_c(t_e *e)
 {
 	if (e->mk->key == KEY_DOWN)
-		e->mk->mousey += 10;
+	{
+		e->fract_cy += .15 * e->zoomc[1];
+		printf(".\n.\n");
+	}
 	if (e->mk->key == KEY_UP)
-		e->mk->mousey -= 10;
+	{
+		e->fract_cy -= .15 * e->zoomc[1];
+		printf("-\n-\n");
+	}
+
 	if (e->mk->key == KEY_RIGHT)
-		e->mk->mousex -= 10;
+		e->fract_cx += .15 * e->zoomc[0];
 	if (e->mk->key == KEY_LEFT)
-		e->mk->mousex += 10;
-	if (e->mk->key == KEY_MINUS && e->color->nbr_ite < (e->ite_max - 10))
-		e->color->nbr_ite += 1;
-	if (e->mk->key == KEY_PLUS && e->color->nbr_ite > 0)
-		e->color->nbr_ite -= 1;
+		e->fract_cx -= .15 * e->zoomc[0];
+	if (e->mk->key == KEY_MINUS && (e->ite_max - 10 > 0))
+		e->ite_max -= 2;
+	else if (e->mk->key == KEY_PLUS && (e->ite_max < 498))
+		e->ite_max += 2;
 	trz(e);
 }
 
@@ -61,6 +68,34 @@ int			keyfonc(int key, t_e *e)
 	if (key == KEY_UP || key == KEY_DOWN ||
 		key == KEY_RIGHT || key == KEY_LEFT)
 		keyfonc_c(e);
+	if (key == 6)
+	{
+		e->zoomc[0] /= 2;
+		e->zoomc[1] /= 2;
+		// e->fract_cx = (-e->fract_cx + e->mk->mousex) / 2;
+		// e->fract_cy = (-e->fract_cy + e->mk->mousey) / 2;
+	//	e->fract_cx = (e->fract_cx - e->mk->mousex) / 2;
+	//	e->fract_cy = (e->fract_cy - e->mk->mousey) / 2;
+
+		//printf("frac = %f et mouse = %f\n", e->fract_cy, e->mk->mousey);
+
+
+
+		// e->fract_cx += (-e->fract_cx + e->mk->mousex) / 2;
+	//	e->fract_cy += (-e->fract_cy + e->mk->mousey) / 2;
+		// if (e->fract_cx < e->mk->mousex)
+		// e->fract_cx += (-e->fract_cx + e->mk->mousex) / 1.2;
+		// 	e->fract_cx += (-e->fract_cx + e->mk->mousex) / 1.2;
+		// else
+		// e->fract_cx += (e->fract_cx - e->mk->mousex) / 1.2;
+		//
+		// if (e->fract_cy < e->mk->mousey)
+		// 	e->fract_cy -= (-e->fract_cy + e->mk->mousey) / 1.2;
+		// else
+		// 	e->fract_cy -= (e->fract_cy - e->mk->mousey) / 1.2;
+		trz(e);
+	}
+
 	if (key == KEY_O)
 	{
 		init_var(e);
