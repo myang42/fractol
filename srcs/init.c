@@ -36,6 +36,7 @@ int			the_one_is(t_e *e, t_fract *fract, char *name)
 		fract[0].max = 1.0;
 		fract[1].min = -1.2;
 		fract[1].max = 1.2;
+		e->fract_cx = 0.0;
 	}
 	if (e->one == -1)
 	{
@@ -43,6 +44,7 @@ int			the_one_is(t_e *e, t_fract *fract, char *name)
 		fract[0].max = 0;
 		fract[1].min = -2;
 		fract[1].max = 0;
+		e->fract_cx = -.25;
 	}
 	if (e->one == 0)
 	{
@@ -59,11 +61,16 @@ void		init_var(t_e *e)
 	e->color->colo = 0;
 	e->color->nbr_ite = 0;
 	e->color->currentcolor = 0;
-	e->zoomc = 100;
-	e->mk->mousey = -W_HEIGHT + W_HEIGHT / 3;
-	e->mk->mousex = W_LENGHT - W_LENGHT / 4;
+	e->zoomc[0] = ((float)W_LENGHT / W_HEIGHT);
+	e->zoomc[1] = 1;
+	e->mk->mousey = W_LENGHT;
+	e->mk->mousex = W_HEIGHT;
+	e->fract_cy = 0.0;
+	e->fract_cx = -.25;
 	e->mk->valre = 1;
 	e->mk->valim = 1;
+	e->val->x = 0;
+	e->val->y = 0;
 }
 
 void		init_struct(t_e *e)
@@ -72,6 +79,7 @@ void		init_struct(t_e *e)
 	e->color = (t_color*)malloc(sizeof(t_color));
 	e->fract = (t_fract*)malloc(sizeof(t_fract) * 2);
 	e->mk = (t_mk*)malloc(sizeof(t_mk) * 2);
+	e->val = (t_val*)malloc(sizeof(t_val));
 	init_var(e);
 }
 
