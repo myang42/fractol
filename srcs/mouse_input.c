@@ -14,39 +14,36 @@
 
 int	mousefonct(int x, int y, t_e *e)
 {
-	if (e->mk->mouse_on == 0)
+	if (y >= 0 && y <= W_HEIGHT && x >= 0 && x <= W_LENGHT)
 	{
-		if (y >= 0 && y <= W_HEIGHT && x >= 0 && x <= W_LENGHT)
-		{
-			e->mk->valre = (float)x / (float)W_HEIGHT;
-			e->mk->valim = (float)y / (float)W_LENGHT;
-			trz(e);
-		}
+		e->mk->mousex = ((float)x / W_LENGHT + -.5) * 2 * e->zoomc[0] +
+		e->fract_cx;
+		e->mk->mousey = ((float)y / W_HEIGHT + -.5) * 2 * e->zoomc[1] +
+		e->fract_cy;
+		trz(e);
 	}
 	return (1);
 }
 
 int	mousefonct_c(int button, int y, int x, t_e *e)
 {
-	float	x2;
-	float	y2;
-
-	y2 = ((float)x - W_HEIGHT / 2);
-	x2 = ((float)y - W_LENGHT / 2);
-	if (button == MOUSE_UP)
-		e->zoomc += 100;
-	if (button == MOUSE_DOWN)
-		e->zoomc += (e->zoomc > 100) ? -100 : 0;
-	while (y2 != 0)
+	(void)x;
+	(void)y;
+	if (button == MOUSE_LEFT && e->zoomc[1] <= 1000)
 	{
-		e->mk->mousey -= (y2 > 0) ? -1 : 1;
-		y2 += (y2 > 0) ? -0.5 : 0.5;
+		e->zoomc[0] *= 2.0;
+		e->zoomc[1] *= 2.0;
+		e->fract_cx -= ((e->mk->mousex - e->fract_cx) / 2.0) / 0.5;
+		e->fract_cy -= ((e->mk->mousey - e->fract_cy) / 2.0) / 0.5;
+		trz(e);
 	}
-	while (x2 != 0)
+	if (button == MOUSE_RIGHT)
 	{
-		e->mk->mousex += (x2 > 0) ? -1 : 1;
-		x2 += (x2 > 0) ? -0.5 : 0.5;
+		e->zoomc[0] /= 2.0;
+		e->zoomc[1] /= 2.0;
+		e->fract_cx += (e->mk->mousex - e->fract_cx) / 2.0;
+		e->fract_cy += (e->mk->mousey - e->fract_cy) / 2.0;
+		trz(e);
 	}
-	trz(e);
 	return (1);
 }

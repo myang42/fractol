@@ -14,7 +14,7 @@
 
 void		p_plan(t_e *e, t_fract *fract)
 {
-	e->ite_max = 250;
+	e->ite_max = 25;
 	fractale(e, fract);
 	mlx_put_image_to_window(e->mlx, e->win, e->img->img_i, 0, 0);
 }
@@ -37,7 +37,7 @@ int			main(int argv, char **argc)
 		print_error(&e);
 		exit(EXIT_FAILURE);
 	}
-	if (the_one_is(&e, e.fract, argc[1]) == 0)
+	if (the_one_is(&e, argc[1]) == 0)
 	{
 		print_error(&e);
 		exit(EXIT_FAILURE);

@@ -32,17 +32,17 @@ void		trz(t_e *e)
 void		keyfonc_c(t_e *e)
 {
 	if (e->mk->key == KEY_DOWN)
-		e->mk->mousey += 10;
+		e->fract_cy += .15 * e->zoomc[1];
 	if (e->mk->key == KEY_UP)
-		e->mk->mousey -= 10;
+		e->fract_cy -= .15 * e->zoomc[1];
 	if (e->mk->key == KEY_RIGHT)
-		e->mk->mousex -= 10;
+		e->fract_cx += .15 * e->zoomc[0];
 	if (e->mk->key == KEY_LEFT)
-		e->mk->mousex += 10;
-	if (e->mk->key == KEY_MINUS && e->color->nbr_ite < (e->ite_max - 10))
-		e->color->nbr_ite += 1;
-	if (e->mk->key == KEY_PLUS && e->color->nbr_ite > 0)
-		e->color->nbr_ite -= 1;
+		e->fract_cx -= .15 * e->zoomc[0];
+	if (e->mk->key == KEY_MINUS && (e->ite_max - 10 > 0))
+		e->ite_max -= 2;
+	else if (e->mk->key == KEY_PLUS && (e->ite_max < 498))
+		e->ite_max += 2;
 	trz(e);
 }
 
@@ -54,19 +54,20 @@ int			keyfonc(int key, t_e *e)
 		e->color->colo = (e->color->colo == 0) ? 1 : 0;
 		trz(e);
 	}
-	if (key == KEY_X)
-		e->mk->mouse_on = (e->mk->mouse_on != 1) ? 1 : 0;
-	if (key == KEY_PLUS || key == KEY_MINUS)
-		keyfonc_c(e);
+	(key == KEY_PLUS || key == KEY_MINUS) ? keyfonc_c(e) : 0;
 	if (key == KEY_UP || key == KEY_DOWN ||
 		key == KEY_RIGHT || key == KEY_LEFT)
 		keyfonc_c(e);
-	if (key == KEY_O)
+	if (key == 6)
 	{
-		init_var(e);
+		e->one = (e->one == -1) ? 1 : e->one - 1;
 		trz(e);
 	}
-	if (key == KEY_ESC)
-		exit(EXIT_FAILURE);
+	if (key == KEY_O)
+	{
+		e->zoomc[0] = ((float)W_LENGHT / W_HEIGHT);
+		e->zoomc[1] = 1;
+	}
+	(key == KEY_ESC) ? exit(EXIT_FAILURE) : 0;
 	return (1);
 }

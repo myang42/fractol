@@ -25,49 +25,35 @@ static void	fract_color(t_e *e, int y, int x, int i)
 			e->color->currentcolor += (PINK_L - e->color->currentcolor);
 		else
 			e->color->currentcolor += (YELLOW_L + e->color->currentcolor);
-		color = (e->color->currentcolor / (e->ite_max - e->color->nbr_ite) * i);
+		color = (e->color->currentcolor / (e->ite_max) * i);
 	}
 	pix_put_img(e, y, x, color);
 }
 
-static void	algo_fract(t_e *e, t_e *z, float cre, float cim)
+static void	algo_fract(t_e *e, t_e *z)
 {
 	float	ere;
 
 	ere = z->re;
 	if (e->one > -1)
 	{
-		z->re = (z->re * z->re) - (z->im * z->im) + (cre);
-		z->im = (2 * z->im * ere) + (cim);
+		z->re = (z->re * z->re) - (z->im * z->im) + e->re;
+		z->im = (2 * z->im * ere) + e->im;
 	}
 	else
 	{
-		z->re = (z->re * z->re) - (z->im * z->im) + (cre);
-		z->im = 2 * ABS((z->im * ere)) + (cim);
+		z->re = (z->re * z->re) - (z->im * z->im) + e->re;
+		z->im = 2 * ABS((z->im * ere)) + e->im;
 	}
 }
 
-static void	def_c(t_e *e, t_fract *fract, float *cre, float *cim)
+static void	increasexy(int *x, int *y)
 {
-	if (e->one <= 0)
-	{
-		*cre = (fract->x / e->zoomc) + fract[0].min;
-		*cim = (fract->y / e->zoomc) + fract[1].min;
-	}
-	else
-	{
-		*cre = -1.0 * e->mk->valre;
-		*cim = -0.667 * e->mk->valim;
-	}
-}
-
-static void	increasexy(t_e *e, int *x, int *y)
-{
-	if (*x < (W_LENGHT - (e->mk->mousex / 2)))
+	if (*x < (W_LENGHT))
 		*x += 1;
 	else
 	{
-		*x = -e->mk->mousex / 2;
+		*x = 0;
 		*y += 1;
 	}
 }
@@ -75,25 +61,27 @@ static void	increasexy(t_e *e, int *x, int *y)
 void		fractale(t_e *e, t_fract *fract)
 {
 	t_e	z;
-	t_e	c;
 	int	i;
 
-	i = 0;
-	fract->x = e->mk->mousex / 2;
-	fract->y = e->mk->mousey / 2;
-	while (fract->y < W_HEIGHT + ((e->mk->mousey / 2)))
+	fract->x = 0;
+	fract->y = 0;
+	while (fract->y < W_HEIGHT)
 	{
-		z.re = (e->one <= 0) ? 0 : (fract->x / e->zoomc) + (fract[0].min);
-		z.im = (e->one <= 0) ? 0 : (fract->y / e->zoomc) + (fract[1].min);
-		def_c(e, fract, &c.re, &c.im);
+		i = 0;
+		e->val->x = ((float)fract->x / (W_LENGHT) + -.5) * 2 * e->zoomc[0] +
+		e->fract_cx;
+		e->val->y = ((float)fract->y / W_HEIGHT + -.5) * 2 * e->zoomc[1] +
+		e->fract_cy;
+		e->re = (e->one != 1) ? e->val->x : e->mk->mousex;
+		e->im = (e->one != 1) ? e->val->y : e->mk->mousey;
+		z.re = (e->one != 1) ? 0 : e->val->x;
+		z.im = (e->one != 1) ? 0 : e->val->y;
 		while ((z.re * z.re + z.im * z.im) < 4 && i <= e->ite_max - 1)
 		{
-			algo_fract(e, &z, c.re, c.im);
+			algo_fract(e, &z);
 			i++;
 		}
-		fract_color(e, fract->y + -e->mk->mousey / 2,
-		fract->x + e->mk->mousex / 2, i);
-		i = 0;
-		increasexy(e, &fract->x, &fract->y);
+		fract_color(e, fract->y, fract->x, i);
+		increasexy(&fract->x, &fract->y);
 	}
 }
