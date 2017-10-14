@@ -47,13 +47,19 @@ typedef struct	s_color
 
 typedef struct	s_mk
 {
-	int			mousex;
-	int			mousey;
+	float		mousex;
+	float		mousey;
 	int			mouse_on;
 	int			key;
 	float		valre;
 	float		valim;
 }				t_mk;
+
+typedef struct	s_val
+{
+	float		x;
+	float		y;
+}				t_val;
 
 typedef struct	s_e
 {
@@ -63,8 +69,11 @@ typedef struct	s_e
 	t_color		*color;
 	t_mk		*mk;
 	t_fract		*fract;
+	t_val		*val;
 	char		*bts;
-	float		zoomc;
+	float		fract_cx;
+	float		fract_cy;
+	float		zoomc[2];
 	float		im;
 	float		re;
 	int			ite_max;
@@ -81,7 +90,7 @@ void			keyfonc_c(t_e *e);
 void			trz(t_e *e);
 void			print_error(t_e *e);
 void			free_val(t_e *e);
-int				the_one_is(t_e *e, t_fract *fract, char *name);
+int				the_one_is(t_e *e, char *name);
 int				keyfonc(int key, t_e *e);
 int				mousefonct(int x, int y, t_e *e);
 int				mousefonct_c(int button, int x, int y, t_e *e);
